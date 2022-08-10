@@ -8,14 +8,22 @@ trigger:
   - refs/pull/*/head
 
 steps:
-- name: test
+- name: test-compitable
   pull: default
   image: golang:1.11
   commands:
-  - go get -u golang.org/x/lint/golint
+  - go build
+  environment:
+    GOPROXY: https://goproxy.io
+    GO111MODULE: "on"
+
+- name: test
+  pull: default
+  image: golang:1.18
+  commands:
+  - go install golang.org/x/lint/golint@latest
   - golint ./...
   - go vet
   - go test -v -race -coverprofile=coverage.txt -covermode=atomic
   environment:
     GOPROXY: https://goproxy.io
-    GO111MODULE: "on"
