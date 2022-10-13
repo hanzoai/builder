@@ -40,11 +40,18 @@ func TestJoin(t *testing.T) {
 	assert.EqualValues(t, []interface{}{1, 3, 1}, args)
 
 	subQuery2 := Select("e").From("table2").Where(Gt{"e": 1})
-	subQuery3 := Select("f").From("table3").Where(Gt{"f": "2"})
+	subQuery3 := Select("f").From("table3", "t3").Where(Gt{"f": "2"})
 	sql, args, err = Select("c, d").From("table1").LeftJoin(subQuery2, Eq{"table1.id": 1}.And(Lt{"table2.id": 3})).
-		InnerJoin(subQuery3, "table2.id = table3.tid").Where(Eq{"a": 1}).ToSQL()
+		InnerJoin(As(subQuery3, "s3"), "table2.id = s3.tid").Where(Eq{"a": 1}).ToSQL()
 	assert.NoError(t, err)
-	assert.EqualValues(t, "SELECT c, d FROM table1 LEFT JOIN (SELECT e FROM table2 WHERE e>?) ON table1.id=? AND table2.id<? INNER JOIN (SELECT f FROM table3 WHERE f>?) ON table2.id = table3.tid WHERE a=?",
+	assert.EqualValues(t, "SELECT c, d FROM table1 LEFT JOIN (SELECT e FROM table2 WHERE e>?) ON table1.id=? AND table2.id<? INNER JOIN (SELECT f FROM table3 t3 WHERE f>?) s3 ON table2.id = s3.tid WHERE a=?",
+		sql)
+	assert.EqualValues(t, []interface{}{1, 1, 3, "2", 1}, args)
+
+	sql, args, err = Select("c, d").From("table1").LeftJoin(As(subQuery2, "t2"), Eq{"table1.id": 1}.And(Lt{"t2.id": 3})).
+		InnerJoin(As(subQuery3, "s3"), "t2.id = s3.tid").Where(Eq{"a": 1}).ToSQL()
+	assert.NoError(t, err)
+	assert.EqualValues(t, "SELECT c, d FROM table1 LEFT JOIN (SELECT e FROM table2 WHERE e>?) t2 ON table1.id=? AND t2.id<? INNER JOIN (SELECT f FROM table3 t3 WHERE f>?) s3 ON t2.id = s3.tid WHERE a=?",
 		sql)
 	assert.EqualValues(t, []interface{}{1, 1, 3, "2", 1}, args)
 }
