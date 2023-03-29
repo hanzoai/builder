@@ -33,6 +33,15 @@ func TestBuilderSelectGroupBy(t *testing.T) {
 	assert.EqualValues(t, "SELECT c FROM table1 GROUP BY c HAVING count(c)=1", sql)
 	assert.EqualValues(t, 0, len(args))
 	fmt.Println(sql, args)
+
+	sql, args, err = Select("c").From("table1").GroupBy("c").Having(Eq{"count(c)": 1}).ToSQL()
+	assert.NoError(t, err)
+	assert.EqualValues(t, "SELECT c FROM table1 GROUP BY c HAVING count(c)=?", sql)
+	assert.EqualValues(t, []interface{}{1}, args)
+	fmt.Println(sql, args)
+
+	_, _, err = Select("c").From("table1").GroupBy("c").Having(1).ToSQL()
+	assert.Error(t, err)
 }
 
 func TestBuilderSelectOrderBy(t *testing.T) {

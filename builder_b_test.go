@@ -286,7 +286,7 @@ func randOrderBy(b *Builder) *Builder {
 }
 
 func randHaving(b *Builder) *Builder {
-	return b.OrderBy(fmt.Sprintf("%v = %v", b.selects[rand.Intn(len(b.selects))], randVal()))
+	return b.Having(randCond(randSelects(), 3))
 }
 
 func randGroupBy(b *Builder) *Builder {

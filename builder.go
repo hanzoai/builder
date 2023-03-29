@@ -68,7 +68,7 @@ type Builder struct {
 	updates    []UpdateCond
 	orderBy    interface{}
 	groupBy    string
-	having     string
+	having     interface{}
 }
 
 // Dialect sets the db dialect of Builder.

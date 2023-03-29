@@ -99,9 +99,25 @@ func (b *Builder) selectWriteTo(w Writer) error {
 		}
 	}
 
-	if len(b.having) > 0 {
-		if _, err := fmt.Fprint(w, " HAVING ", b.having); err != nil {
-			return err
+	if b.having != nil {
+		switch c := b.having.(type) {
+		case string:
+			if len(c) > 0 {
+				if _, err := fmt.Fprint(w, " HAVING ", c); err != nil {
+					return err
+				}
+			}
+		case Cond:
+			if c.IsValid() {
+				if _, err := fmt.Fprint(w, " HAVING "); err != nil {
+					return err
+				}
+				if err := c.WriteTo(w); err != nil {
+					return err
+				}
+			}
+		default:
+			return fmt.Errorf("unknown having parameter: %#v", b.having)
 		}
 	}
 
@@ -147,7 +163,7 @@ func (b *Builder) GroupBy(groupby string) *Builder {
 }
 
 // Having having SQL
-func (b *Builder) Having(having string) *Builder {
+func (b *Builder) Having(having interface{}) *Builder {
 	b.having = having
 	return b
 }
