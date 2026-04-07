@@ -1,4 +1,4 @@
-module xorm.io/builder
+module github.com/hanzoai/builder
 
 go 1.11
 
