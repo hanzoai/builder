@@ -1,6 +1,6 @@
 module github.com/hanzoai/builder
 
-go 1.11
+go 1.26.3
 
 require (
 	gitea.com/xorm/sqlfiddle v0.0.0-20180821085327-62ce714f951a
