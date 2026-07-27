@@ -24,7 +24,7 @@ func (b *Builder) insertSelectWriteTo(w Writer) error {
 	if len(b.insertCols) > 0 {
 		fmt.Fprintf(w, "(")
 		for _, col := range b.insertCols {
-			fmt.Fprintf(w, col)
+			fmt.Fprint(w, col)
 		}
 		fmt.Fprintf(w, ") ")
 	}
