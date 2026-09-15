@@ -9,7 +9,7 @@ jobs:
     # The git-runner fleet at git.hanzo.ai is the only pool serving labels here,
     # and it stopped offering ubuntu-latest. A job asking for it is accepted and
     # then queued forever, which reads as "still running" rather than as broken.
-    runs-on: hanzo-build-linux-amd64
+    runs-on: linux-amd64
     steps:
       - uses: actions/checkout@v4
       # go.mod is the only place the Go version is written. A pinned number here
