@@ -7,8 +7,8 @@ package builder
 import "fmt"
 
 // WriteMap writes conditions' SQL to Writer, op could be =, <>, >, <, <=, >= and etc.
-func WriteMap(w Writer, data map[string]interface{}, op string) error {
-	args := make([]interface{}, 0, len(data))
+func WriteMap(w Writer, data map[string]any, op string) error {
+	args := make([]any, 0, len(data))
 	i := 0
 	keys := make([]string, 0, len(data))
 	for k := range data {
@@ -60,7 +60,7 @@ func WriteMap(w Writer, data map[string]interface{}, op string) error {
 }
 
 // Lt defines < condition
-type Lt map[string]interface{}
+type Lt map[string]any
 
 var _ Cond = Lt{}
 
@@ -85,7 +85,7 @@ func (lt Lt) IsValid() bool {
 }
 
 // Lte defines <= condition
-type Lte map[string]interface{}
+type Lte map[string]any
 
 var _ Cond = Lte{}
 
@@ -110,7 +110,7 @@ func (lte Lte) IsValid() bool {
 }
 
 // Gt defines > condition
-type Gt map[string]interface{}
+type Gt map[string]any
 
 var _ Cond = Gt{}
 
@@ -135,7 +135,7 @@ func (gt Gt) IsValid() bool {
 }
 
 // Gte defines >= condition
-type Gte map[string]interface{}
+type Gte map[string]any
 
 var _ Cond = Gte{}
 

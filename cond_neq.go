@@ -10,13 +10,13 @@ import (
 )
 
 // Neq defines not equal conditions
-type Neq map[string]interface{}
+type Neq map[string]any
 
 var _ Cond = Neq{}
 
 // WriteTo writes SQL to Writer
 func (neq Neq) WriteTo(w Writer) error {
-	args := make([]interface{}, 0, len(neq))
+	args := make([]any, 0, len(neq))
 	i := 0
 	for _, k := range neq.sortedKeys() {
 		v := neq[k]

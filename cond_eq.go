@@ -16,7 +16,7 @@ type Incr int
 type Decr int
 
 // Eq defines equals conditions
-type Eq map[string]interface{}
+type Eq map[string]any
 
 var _ Cond = Eq{}
 
@@ -26,7 +26,7 @@ func (eq Eq) OpWriteTo(op string, w Writer) error {
 	for _, k := range eq.sortedKeys() {
 		v := eq[k]
 		switch v.(type) {
-		case []int, []int64, []string, []int32, []int16, []int8, []uint, []uint64, []uint32, []uint16, []interface{}:
+		case []int, []int64, []string, []int32, []int16, []int8, []uint, []uint64, []uint32, []uint16, []any:
 			if err := In(k, v).WriteTo(w); err != nil {
 				return err
 			}

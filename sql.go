@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func condToSQL(cond Cond) (string, []interface{}, error) {
+func condToSQL(cond Cond) (string, []any, error) {
 	if cond == nil || !cond.IsValid() {
 		return "", nil, nil
 	}
@@ -37,7 +37,7 @@ func condToBoundSQL(cond Cond) (string, error) {
 }
 
 // ToSQL convert a builder or conditions to SQL and args
-func ToSQL(cond interface{}) (string, []interface{}, error) {
+func ToSQL(cond any) (string, []any, error) {
 	switch cond.(type) {
 	case Cond:
 		return condToSQL(cond.(Cond))
@@ -48,7 +48,7 @@ func ToSQL(cond interface{}) (string, []interface{}, error) {
 }
 
 // ToBoundSQL convert a builder or conditions to parameters bound SQL
-func ToBoundSQL(cond interface{}) (string, error) {
+func ToBoundSQL(cond any) (string, error) {
 	switch cond.(type) {
 	case Cond:
 		return condToBoundSQL(cond.(Cond))
@@ -58,7 +58,7 @@ func ToBoundSQL(cond interface{}) (string, error) {
 	return "", ErrNotSupportType
 }
 
-func noSQLQuoteNeeded(a interface{}) bool {
+func noSQLQuoteNeeded(a any) bool {
 	if a == nil {
 		return false
 	}
@@ -96,7 +96,7 @@ func noSQLQuoteNeeded(a interface{}) bool {
 }
 
 // ConvertToBoundSQL will convert SQL and args to a bound SQL
-func ConvertToBoundSQL(sql string, args []interface{}) (string, error) {
+func ConvertToBoundSQL(sql string, args []any) (string, error) {
 	buf := strings.Builder{}
 	var i, j, start int
 	for ; i < len(sql); i++ {

@@ -12,7 +12,7 @@ import (
 // Writer defines the interface
 type Writer interface {
 	io.Writer
-	Append(...interface{})
+	Append(...any)
 }
 
 var _ Writer = NewWriter()
@@ -20,7 +20,7 @@ var _ Writer = NewWriter()
 // BytesWriter implments Writer and save SQL in bytes.Buffer
 type BytesWriter struct {
 	*strings.Builder
-	args []interface{}
+	args []any
 }
 
 // NewWriter creates a new string writer
@@ -32,11 +32,11 @@ func NewWriter() *BytesWriter {
 }
 
 // Append appends args to Writer
-func (w *BytesWriter) Append(args ...interface{}) {
+func (w *BytesWriter) Append(args ...any) {
 	w.args = append(w.args, args...)
 }
 
 // Args returns args
-func (w *BytesWriter) Args() []interface{} {
+func (w *BytesWriter) Args() []any {
 	return w.args
 }

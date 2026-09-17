@@ -14,7 +14,7 @@ func TestBuilderDelete(t *testing.T) {
 	sql, args, err := Delete(Eq{"a": 1}).From("table1").ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "DELETE FROM table1 WHERE a=?", sql)
-	assert.EqualValues(t, []interface{}{1}, args)
+	assert.EqualValues(t, []any{1}, args)
 }
 
 func TestDeleteNoTable(t *testing.T) {

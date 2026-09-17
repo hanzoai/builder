@@ -19,7 +19,7 @@ func TestBuilder_Union(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) UNION ALL (SELECT * FROM t2 WHERE status=?) UNION DISTINCT (SELECT * FROM t2 WHERE status=?) UNION (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3", "3"}, args)
 
 	// sub-query will inherit dialect from the main one
 	sql, args, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).
@@ -28,7 +28,7 @@ func TestBuilder_Union(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) UNION ALL (SELECT * FROM t2 WHERE status=? LIMIT 10) UNION (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3"}, args)
 
 	// will raise error
 	_, _, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).
@@ -81,7 +81,7 @@ func TestBuilder_Intersect(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) INTERSECT ALL (SELECT * FROM t2 WHERE status=?) INTERSECT DISTINCT (SELECT * FROM t2 WHERE status=?) INTERSECT (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3", "3"}, args)
 
 	// sub-query will inherit dialect from the main one
 	sql, args, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).
@@ -90,7 +90,7 @@ func TestBuilder_Intersect(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) INTERSECT ALL (SELECT * FROM t2 WHERE status=? LIMIT 10) INTERSECT (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3"}, args)
 
 	// will raise error
 	_, _, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).
@@ -143,7 +143,7 @@ func TestBuilder_Except(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) EXCEPT ALL (SELECT * FROM t2 WHERE status=?) EXCEPT DISTINCT (SELECT * FROM t2 WHERE status=?) EXCEPT (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3", "3"}, args)
 
 	// sub-query will inherit dialect from the main one
 	sql, args, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).
@@ -152,7 +152,7 @@ func TestBuilder_Except(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) EXCEPT ALL (SELECT * FROM t2 WHERE status=? LIMIT 10) EXCEPT (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3"}, args)
 
 	// will raise error
 	_, _, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).
@@ -205,7 +205,7 @@ func TestBuilder_SetOperations(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) UNION ALL (SELECT * FROM t2 WHERE status=?) INTERSECT DISTINCT (SELECT * FROM t2 WHERE status=?) EXCEPT (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3", "3"}, args)
 
 	sql, args, err = Select("*").From("t1").Where(Eq{"status": "1"}).
 		Intersect("all", Select("*").From("t2").Where(Eq{"status": "2"})).
@@ -214,7 +214,7 @@ func TestBuilder_SetOperations(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) INTERSECT ALL (SELECT * FROM t2 WHERE status=?) UNION DISTINCT (SELECT * FROM t2 WHERE status=?) EXCEPT (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3", "3"}, args)
 
 	sql, args, err = Select("*").From("t1").Where(Eq{"status": "1"}).
 		Except("all", Select("*").From("t2").Where(Eq{"status": "2"})).
@@ -223,7 +223,7 @@ func TestBuilder_SetOperations(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) EXCEPT ALL (SELECT * FROM t2 WHERE status=?) INTERSECT DISTINCT (SELECT * FROM t2 WHERE status=?) UNION (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3", "3"}, args)
 
 	// sub-query will inherit dialect from the main one
 	sql, args, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).
@@ -232,7 +232,7 @@ func TestBuilder_SetOperations(t *testing.T) {
 		ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "(SELECT * FROM t1 WHERE status=?) INTERSECT ALL (SELECT * FROM t2 WHERE status=? LIMIT 10) INTERSECT (SELECT * FROM t2 WHERE status=?)", sql)
-	assert.EqualValues(t, []interface{}{"1", "2", "3"}, args)
+	assert.EqualValues(t, []any{"1", "2", "3"}, args)
 
 	// will raise error
 	_, _, err = MySQL().Select("*").From("t1").Where(Eq{"status": "1"}).

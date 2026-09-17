@@ -40,7 +40,7 @@ func TestBuilderInsert(t *testing.T) {
 	sql, args, err := Insert(Eq{`a`: nil, `b`: `str`}).Into(`table1`).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, `INSERT INTO table1 (a,b) Values (null,?)`, sql)
-	assert.EqualValues(t, []interface{}{`str`}, args)
+	assert.EqualValues(t, []any{`str`}, args)
 }
 
 func TestBuidlerInsert_Select(t *testing.T) {

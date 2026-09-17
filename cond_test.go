@@ -17,7 +17,7 @@ func TestCond_NotIn(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, "test NOT IN (?,?,?,?)", buf.String())
 		assert.Len(t, buf.args, 4)
-		assert.Equal(t, []interface{}{1, 2, 3, 4}, buf.args)
+		assert.Equal(t, []any{1, 2, 3, 4}, buf.args)
 	})
 	t.Run("slice", func(t *testing.T) {
 		cond := NotIn("test", []int{1, 2, 2, 3, 4, 4, 4})
@@ -26,7 +26,7 @@ func TestCond_NotIn(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, "test NOT IN (?,?,?,?)", buf.String())
 		assert.Len(t, buf.args, 4)
-		assert.Equal(t, []interface{}{1, 2, 3, 4}, buf.args)
+		assert.Equal(t, []any{1, 2, 3, 4}, buf.args)
 	})
 	t.Run("blank", func(t *testing.T) {
 		cond := NotIn("test")
@@ -46,7 +46,7 @@ func TestCond_In(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, "test IN (?,?,?,?)", buf.String())
 		assert.Len(t, buf.args, 4)
-		assert.Equal(t, []interface{}{1, 2, 3, 4}, buf.args)
+		assert.Equal(t, []any{1, 2, 3, 4}, buf.args)
 	})
 	t.Run("slice", func(t *testing.T) {
 		cond := In("test", []int{1, 2, 2, 3, 4, 4, 4})
@@ -55,7 +55,7 @@ func TestCond_In(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, "test IN (?,?,?,?)", buf.String())
 		assert.Len(t, buf.args, 4)
-		assert.Equal(t, []interface{}{1, 2, 3, 4}, buf.args)
+		assert.Equal(t, []any{1, 2, 3, 4}, buf.args)
 	})
 	t.Run("blank", func(t *testing.T) {
 		cond := In("test")

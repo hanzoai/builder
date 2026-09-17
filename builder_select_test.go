@@ -15,12 +15,12 @@ func TestBuilder_Select(t *testing.T) {
 	sql, args, err := Select("c, d").From("table1").ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT c, d FROM table1", sql)
-	assert.EqualValues(t, []interface{}(nil), args)
+	assert.EqualValues(t, []any(nil), args)
 
 	sql, args, err = Select("c, d").From("table1").Where(Eq{"a": 1}).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT c, d FROM table1 WHERE a=?", sql)
-	assert.EqualValues(t, []interface{}{1}, args)
+	assert.EqualValues(t, []any{1}, args)
 
 	_, _, err = Select("c, d").ToSQL()
 	assert.Error(t, err)
@@ -37,7 +37,7 @@ func TestBuilderSelectGroupBy(t *testing.T) {
 	sql, args, err = Select("c").From("table1").GroupBy("c").Having(Eq{"count(c)": 1}).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT c FROM table1 GROUP BY c HAVING count(c)=?", sql)
-	assert.EqualValues(t, []interface{}{1}, args)
+	assert.EqualValues(t, []any{1}, args)
 	fmt.Println(sql, args)
 
 	_, _, err = Select("c").From("table1").GroupBy("c").Having(1).ToSQL()
@@ -70,7 +70,7 @@ func TestBuilder_From(t *testing.T) {
 		"sub").Where(Eq{"b": 1}).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT sub.id FROM (SELECT id FROM table1 WHERE a=?) sub WHERE b=?", sql)
-	assert.EqualValues(t, []interface{}{1, 1}, args)
+	assert.EqualValues(t, []any{1, 1}, args)
 
 	// from sub without alias and with conditions
 	sql, args, err = Select("sub.id").From(Select("id").From("table1").Where(Eq{"a": 1})).Where(Eq{"b": 1}).ToSQL()
@@ -81,7 +81,7 @@ func TestBuilder_From(t *testing.T) {
 	sql, args, err = Select("sub.id").From(Select("id").From("table1").Where(Eq{"a": 1})).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT sub.id FROM (SELECT id FROM table1 WHERE a=?)", sql)
-	assert.EqualValues(t, []interface{}{1}, args)
+	assert.EqualValues(t, []any{1}, args)
 
 	// from union with alias
 	sql, args, err = Select("sub.id").From(
@@ -89,7 +89,7 @@ func TestBuilder_From(t *testing.T) {
 			"all", Select("id").From("table1").Where(Eq{"a": 2})), "sub").Where(Eq{"b": 1}).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT sub.id FROM ((SELECT id FROM table1 WHERE a=?) UNION ALL (SELECT id FROM table1 WHERE a=?)) sub WHERE b=?", sql)
-	assert.EqualValues(t, []interface{}{1, 2, 1}, args)
+	assert.EqualValues(t, []any{1, 2, 1}, args)
 
 	// from union without alias
 	_, _, err = Select("sub.id").From(
@@ -119,12 +119,12 @@ func TestBuilder_From(t *testing.T) {
 		MySQL().Select("id").From("table1").Where(Eq{"a": 1}), "sub").Where(Eq{"b": 1}).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT sub.id FROM (SELECT id FROM table1 WHERE a=?) sub WHERE b=?", sql)
-	assert.EqualValues(t, []interface{}{1, 1}, args)
+	assert.EqualValues(t, []any{1, 1}, args)
 
 	// from a sub-query (dialect not set up)
 	sql, args, err = MySQL().Select("sub.id").From(
 		Select("id").From("table1").Where(Eq{"a": 1}), "sub").Where(Eq{"b": 1}).ToSQL()
 	assert.NoError(t, err)
 	assert.EqualValues(t, "SELECT sub.id FROM (SELECT id FROM table1 WHERE a=?) sub WHERE b=?", sql)
-	assert.EqualValues(t, []interface{}{1, 1}, args)
+	assert.EqualValues(t, []any{1, 1}, args)
 }

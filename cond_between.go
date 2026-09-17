@@ -9,8 +9,8 @@ import "fmt"
 // Between implmentes between condition
 type Between struct {
 	Col     string
-	LessVal interface{}
-	MoreVal interface{}
+	LessVal any
+	MoreVal any
 }
 
 var _ Cond = Between{}

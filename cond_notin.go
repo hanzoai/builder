@@ -15,7 +15,7 @@ type condNotIn condIn
 var _ Cond = condNotIn{}
 
 // NotIn generate NOT IN condition
-func NotIn(col string, values ...interface{}) Cond {
+func NotIn(col string, values ...any) Cond {
 	return condNotIn{col, values}
 }
 
@@ -228,8 +228,8 @@ func (condNotIn condNotIn) WriteTo(w Writer) error {
 		if _, err := fmt.Fprintf(w, "%s NOT IN (%s)", condNotIn.col, questionMark[:len(questionMark)-1]); err != nil {
 			return err
 		}
-	case []interface{}:
-		vals := condNotIn.vals[0].([]interface{})
+	case []any:
+		vals := condNotIn.vals[0].([]any)
 		if len(vals) <= 0 {
 			return condNotIn.handleBlank(w)
 		}
@@ -268,8 +268,8 @@ func (condNotIn condNotIn) WriteTo(w Writer) error {
 				return condNotIn.handleBlank(w)
 			}
 
-			trackMap := make(map[interface{}]bool, l)
-			for i := 0; i < l; i++ {
+			trackMap := make(map[any]bool, l)
+			for i := range l {
 				val := v.Index(i).Interface()
 				if _, exists := trackMap[val]; exists {
 					continue
@@ -284,7 +284,7 @@ func (condNotIn condNotIn) WriteTo(w Writer) error {
 			}
 		} else {
 			// Using a map for better efficiency
-			trackMap := make(map[interface{}]bool, len(condNotIn.vals))
+			trackMap := make(map[any]bool, len(condNotIn.vals))
 
 			i := 0
 			for in, val := range condNotIn.vals {

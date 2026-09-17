@@ -12,13 +12,13 @@ import (
 
 type condIn struct {
 	col  string
-	vals []interface{}
+	vals []any
 }
 
 var _ Cond = condIn{}
 
 // In generates IN condition
-func In(col string, values ...interface{}) Cond {
+func In(col string, values ...any) Cond {
 	return condIn{col, values}
 }
 
@@ -231,8 +231,8 @@ func (condIn condIn) WriteTo(w Writer) error {
 		if _, err := fmt.Fprintf(w, "%s IN (%s)", condIn.col, questionMark[:len(questionMark)-1]); err != nil {
 			return err
 		}
-	case []interface{}:
-		vals := condIn.vals[0].([]interface{})
+	case []any:
+		vals := condIn.vals[0].([]any)
 		if len(vals) <= 0 {
 			return condIn.handleBlank(w)
 		}
@@ -271,8 +271,8 @@ func (condIn condIn) WriteTo(w Writer) error {
 				return condIn.handleBlank(w)
 			}
 
-			trackMap := make(map[interface{}]bool, l)
-			for i := 0; i < l; i++ {
+			trackMap := make(map[any]bool, l)
+			for i := range l {
 				val := v.Index(i).Interface()
 				if _, exists := trackMap[val]; exists {
 					continue
@@ -287,7 +287,7 @@ func (condIn condIn) WriteTo(w Writer) error {
 			}
 		} else {
 			// Using a map for better efficiency
-			trackMap := make(map[interface{}]bool, len(condIn.vals))
+			trackMap := make(map[any]bool, len(condIn.vals))
 
 			i := 0
 			for in, val := range condIn.vals {

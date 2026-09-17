@@ -21,7 +21,7 @@ type randGenConf struct {
 	allowSubQuery bool
 }
 
-var expectedValues = []interface{}{
+var expectedValues = []any{
 	"dangerous", "fun", "degree", "hospital", "horseshoe", "summit", "parallel", "height", "recommend", "invite",
 	0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
@@ -161,7 +161,7 @@ func randInsertByCondition(rgc *randGenConf) *Builder {
 	times := rand.Intn(10) + 1
 
 	eqs := Eq{}
-	for i := 0; i < times; i++ {
+	for range times {
 		eqs[fields[rand.Intn(len(fields))]] = "expected"
 	}
 
@@ -180,7 +180,7 @@ func randUpdateByCondition(rgc *randGenConf) *Builder {
 	times := rand.Intn(10) + 1
 
 	eqs := Eq{}
-	for i := 0; i < times; i++ {
+	for range times {
 		eqs[fields[rand.Intn(len(fields))]] = randVal()
 	}
 
@@ -250,7 +250,7 @@ func randJoin(b *Builder, lessThan int) *Builder {
 
 	times := rand.Intn(lessThan)
 
-	for i := 0; i < times; i++ {
+	for i := range times {
 		tableName := randTableName(i * 10)
 		b = b.Join("", tableName, fmt.Sprintf("%v.id = %v.id", b.TableName(), tableName))
 	}
@@ -266,7 +266,7 @@ func randCond(selects []string, lessThan int) Cond {
 	cond := NewCond()
 
 	times := rand.Intn(lessThan)
-	for i := 0; i < times; i++ {
+	for range times {
 		cond = cond.And(Eq{selects[rand.Intn(len(selects))]: randVal()})
 	}
 
@@ -293,6 +293,6 @@ func randGroupBy(b *Builder) *Builder {
 	return b.GroupBy(fmt.Sprintf("%v = %v", b.selects[rand.Intn(len(b.selects))], randVal()))
 }
 
-func randVal() interface{} {
+func randVal() any {
 	return expectedValues[rand.Intn(len(expectedValues))]
 }

@@ -35,7 +35,7 @@ const (
 
 type join struct {
 	joinType  string
-	joinTable interface{}
+	joinTable any
 	joinCond  Cond
 }
 
@@ -64,11 +64,11 @@ type Builder struct {
 	setOps     []setOp
 	limitation *limit
 	insertCols []string
-	insertVals []interface{}
+	insertVals []any
 	updates    []UpdateCond
-	orderBy    interface{}
+	orderBy    any
 	groupBy    string
-	having     interface{}
+	having     any
 }
 
 // Dialect sets the db dialect of Builder.
@@ -113,7 +113,7 @@ func (b *Builder) Where(cond Cond) *Builder {
 }
 
 // From sets from subject(can be a table name in string or a builder pointer) and its alias
-func (b *Builder) From(subject interface{}, aliasMaybe ...string) *Builder {
+func (b *Builder) From(subject any, aliasMaybe ...string) *Builder {
 	alias := ""
 	if len(aliasMaybe) > 0 {
 		alias = aliasMaybe[0]
@@ -277,7 +277,7 @@ func (b *Builder) WriteTo(w Writer) error {
 }
 
 // ToSQL convert a builder to SQL and args
-func (b *Builder) ToSQL() (string, []interface{}, error) {
+func (b *Builder) ToSQL() (string, []any, error) {
 	w := NewWriter()
 	if err := b.WriteTo(w); err != nil {
 		return "", nil, err

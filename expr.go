@@ -9,13 +9,13 @@ import "fmt"
 // Expression represetns a SQL express with arguments
 type Expression struct {
 	sql  string
-	args []interface{}
+	args []any
 }
 
 var _ Cond = &Expression{}
 
 // Expr generate customerize SQL
-func Expr(sql string, args ...interface{}) Cond {
+func Expr(sql string, args ...any) Cond {
 	return &Expression{sql, args}
 }
 
@@ -23,7 +23,7 @@ func (expr *Expression) Content() string {
 	return expr.sql
 }
 
-func (expr *Expression) Args() []interface{} {
+func (expr *Expression) Args() []any {
 	return expr.args
 }
 

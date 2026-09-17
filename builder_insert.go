@@ -11,7 +11,7 @@ import (
 )
 
 // Insert creates an insert Builder
-func Insert(eq ...interface{}) *Builder {
+func Insert(eq ...any) *Builder {
 	builder := &Builder{cond: NewCond()}
 	return builder.Insert(eq...)
 }
@@ -48,7 +48,7 @@ func (b *Builder) insertWriteTo(w Writer) error {
 		return err
 	}
 
-	args := make([]interface{}, 0)
+	args := make([]any, 0)
 	var bs []byte
 	valBuffer := bytes.NewBuffer(bs)
 
@@ -93,7 +93,7 @@ func (b *Builder) insertWriteTo(w Writer) error {
 
 type insertColsSorter struct {
 	cols []string
-	vals []interface{}
+	vals []any
 }
 
 func (s insertColsSorter) Len() int {
@@ -110,7 +110,7 @@ func (s insertColsSorter) Less(i, j int) bool {
 }
 
 // Insert sets insert SQL
-func (b *Builder) Insert(eq ...interface{}) *Builder {
+func (b *Builder) Insert(eq ...any) *Builder {
 	if len(eq) > 0 {
 		paramType := -1
 		for _, e := range eq {

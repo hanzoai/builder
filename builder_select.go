@@ -151,7 +151,7 @@ func (b *Builder) selectWriteTo(w Writer) error {
 }
 
 // OrderBy orderBy SQL
-func (b *Builder) OrderBy(orderBy interface{}) *Builder {
+func (b *Builder) OrderBy(orderBy any) *Builder {
 	b.orderBy = orderBy
 	return b
 }
@@ -163,7 +163,7 @@ func (b *Builder) GroupBy(groupby string) *Builder {
 }
 
 // Having having SQL
-func (b *Builder) Having(having interface{}) *Builder {
+func (b *Builder) Having(having any) *Builder {
 	b.having = having
 	return b
 }

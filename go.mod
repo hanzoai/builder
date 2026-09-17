@@ -1,6 +1,6 @@
 module github.com/hanzoai/builder
 
-go 1.26.5
+go 1.27.1
 
 require github.com/stretchr/testify v1.3.0
 
